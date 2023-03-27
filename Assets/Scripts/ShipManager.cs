@@ -18,6 +18,10 @@ public class ShipManager : MonoBehaviour
     #endregion
 
     #region start/update/physics
+    private void Start()
+    {
+        fireAgain = true;
+    }
     void Update()
     {
         // Movement

@@ -13,7 +13,7 @@ public class AsteroidMovement : MonoBehaviour
 
     // Private 
     private Rigidbody2D rigidbodyAsteroid;
-    private float speed = 2f;
+    //private float speed = 2f;
     #endregion
     private void Awake()
     {
@@ -33,7 +33,7 @@ public class AsteroidMovement : MonoBehaviour
         float height = 1 / width;
         transform.localScale = new Vector2(width, height) * theMass;
 
-        rigidbodyAsteroid.velocity = direction.normalized * speed;
+        rigidbodyAsteroid.velocity = direction.normalized * GlobalVariables.asteroidSpeedGlobal;
         rigidbodyAsteroid.AddTorque(Random.Range(-4f, 4f));
     }
 
@@ -49,6 +49,24 @@ public class AsteroidMovement : MonoBehaviour
             else if (rigidbodyAsteroid.mass == 0.5f)
                 GlobalVariables.score += 100;
             _ui.UpdateScore();
+
+            // Update Speed
+            if (GlobalVariables.score > 1000 && GlobalVariables.score < 2000)
+            {
+                GlobalVariables.asteroidSpeedGlobal = 3.0f;
+                GlobalVariables.asteroidFrequencyGlobal = 1.5f;
+            }
+            else if (GlobalVariables.score > 2000 && GlobalVariables.score < 3000)
+            {
+                GlobalVariables.asteroidSpeedGlobal = 4.0f;
+                GlobalVariables.asteroidFrequencyGlobal = 1.0f;
+            }
+            else if (GlobalVariables.score > 3000)
+            {
+                GlobalVariables.asteroidSpeedGlobal = 5.0f;
+                GlobalVariables.asteroidFrequencyGlobal = 0.5f;
+            }
+
 
             if (rigidbodyAsteroid.mass > 0.5f)
             {

@@ -26,13 +26,25 @@ public class UIManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI endGameScore;
     [SerializeField] GameObject gameOverUI;
 
-    [Header("LeaderBoard")]
+    [Header("PauseApp")]
+    [SerializeField] GameObject pauseMenu;
+
+
+    [Header("LeaderBoard-End")]
     [SerializeField] TextMeshProUGUI name1;
     [SerializeField] TextMeshProUGUI name2;
     [SerializeField] TextMeshProUGUI name3;
     [SerializeField] TextMeshProUGUI score1;
     [SerializeField] TextMeshProUGUI score2;
     [SerializeField] TextMeshProUGUI score3;
+
+    [Header("LeaderBoard-Start")]
+    [SerializeField] TextMeshProUGUI sname1;
+    [SerializeField] TextMeshProUGUI sname2;
+    [SerializeField] TextMeshProUGUI sname3;
+    [SerializeField] TextMeshProUGUI sscore1;
+    [SerializeField] TextMeshProUGUI sscore2;
+    [SerializeField] TextMeshProUGUI sscore3;
 
     private string fileName;
     public List<Score> gameScore;
@@ -41,8 +53,15 @@ public class UIManager : MonoBehaviour
     {
         gameScore = new List<Score>();
         fileName = Application.dataPath + "/LeaderBoardData.csv";
+        LoadLeaderboard();
     }
-
+    void Update()
+    {
+        if (Input.GetKey(KeyCode.Escape))
+        {
+            PauseApp();
+        }
+    }
     public void UpdateLifeCount()
     {
         if (GlobalVariables.life == 1)
@@ -67,7 +86,7 @@ public class UIManager : MonoBehaviour
 
     public void QuitApp()
     {
-        ClearCSV();
+        //ClearCSV();
         if (Application.isEditor)
         {
             UnityEditor.EditorApplication.isPlaying = false;
@@ -81,7 +100,7 @@ public class UIManager : MonoBehaviour
     public void StartApp()
     {
         userName.text = userInputName.text;
-        GlobalVariables.userName = userInputName.text.ToString();
+        GlobalVariables.userName = userInputName.text.ToString().Replace(",", "");
         script.SetActive(true);
         inGameUI.SetActive(true);
         menuUI.SetActive(false);
@@ -104,6 +123,22 @@ public class UIManager : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
 
+    public void PauseApp()
+    {
+        script.SetActive(false);
+        inGameUI.SetActive(false);
+        ship.SetActive(false);
+        pauseMenu.SetActive(true);
+    }
+
+    public void ResumeApp()
+    {
+        pauseMenu.SetActive(false);
+        script.SetActive(true);
+        inGameUI.SetActive(true);
+        ship.SetActive(true);
+    }
+
     private void WriteCSV()
     {
         TextWriter tw = new StreamWriter(fileName, append: true);
@@ -116,7 +151,7 @@ public class UIManager : MonoBehaviour
         GlobalVariables.score = 0;
 
         // Ready and update leaderboard
-        ReadCSV();
+        ReadCSV(false);
     }
 
     private void ClearCSV()
@@ -126,7 +161,7 @@ public class UIManager : MonoBehaviour
         tw.Close();
     }
 
-    private void ReadCSV()
+    private void ReadCSV(bool onStart)
     {
         string line;
         int lineNumber = 1;
@@ -141,7 +176,14 @@ public class UIManager : MonoBehaviour
             lineNumber++;
         }
         gameScore = gameScore.OrderByDescending(x => x.score).ToList();
-        LeaderBoardData();
+        if (onStart)
+        {
+            LeaderBoardDataOnStart();
+        }
+        else
+        {
+            LeaderBoardData();
+        }
     }
 
     private void LeaderBoardData()
@@ -168,5 +210,36 @@ public class UIManager : MonoBehaviour
             name3.text = gameScore[2].userName;
             score3.text = gameScore[2].score.ToString();
         }
+    }
+
+    private void LeaderBoardDataOnStart()
+    {
+        Debug.Log(gameScore.Count);
+        if (gameScore.Count == 1)
+        {
+            sname1.text = gameScore[0].userName;
+            sscore1.text = gameScore[0].score.ToString();
+        }
+        if (gameScore.Count == 2)
+        {
+            sname1.text = gameScore[0].userName;
+            sscore1.text = gameScore[0].score.ToString();
+            sname2.text = gameScore[1].userName;
+            sscore2.text = gameScore[1].score.ToString();
+        }
+        if (gameScore.Count > 2)
+        {
+            sname1.text = gameScore[0].userName;
+            sscore1.text = gameScore[0].score.ToString();
+            sname2.text = gameScore[1].userName;
+            sscore2.text = gameScore[1].score.ToString();
+            sname3.text = gameScore[2].userName;
+            sscore3.text = gameScore[2].score.ToString();
+        }
+    }
+
+    private void LoadLeaderboard()
+    {
+        ReadCSV(true);
     }
 }

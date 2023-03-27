@@ -7,7 +7,7 @@ public class SpawnAsteroid : MonoBehaviour
     #region variables
     // Editable from Editor
     [SerializeField] private AsteroidMovement _asteroidMovement;
-    [SerializeField] private float spawnFrequency = 2;
+    //[SerializeField] private float spawnFrequency = 2;
 
     // Private 
     private float spawnDistance;
@@ -17,13 +17,14 @@ public class SpawnAsteroid : MonoBehaviour
     private void Start()
     {
         spawnDistance = Screen.width / 100;
-        InvokeRepeating("SpawnElement", 0, spawnFrequency);
+        StartCoroutine(SpawnElement());
+        //InvokeRepeating("SpawnElement", 0, spawnFrequency);
     }
 
     #endregion
 
     #region privateFuntions
-    void SpawnElement()
+    IEnumerator SpawnElement()
     {
         Vector2 spawnPoint = Random.insideUnitCircle.normalized * spawnDistance;
 
@@ -36,6 +37,9 @@ public class SpawnAsteroid : MonoBehaviour
         // 1.5, 1, 0.5;
         //float mass = Random.Range(0.8f, 1.4f);
         astroid.kick(1.5f, direction);
+
+        yield return new WaitForSeconds(GlobalVariables.asteroidFrequencyGlobal);
+        StartCoroutine(SpawnElement());
     }
     #endregion
 }
