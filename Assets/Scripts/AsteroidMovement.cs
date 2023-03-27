@@ -42,11 +42,11 @@ public class AsteroidMovement : MonoBehaviour
         if(collision.tag == "Bullet")
         {
             // Score
-            if (rigidbodyAsteroid.mass == 1.5f)
+            if (rigidbodyAsteroid.mass > 1.5f)
                 GlobalVariables.score += 20;
             else if (rigidbodyAsteroid.mass == 1.0f)
                 GlobalVariables.score += 50;
-            else if (rigidbodyAsteroid.mass == 0.8f)
+            else if (rigidbodyAsteroid.mass == 0.5f)
                 GlobalVariables.score += 100;
             _ui.UpdateScore();
 

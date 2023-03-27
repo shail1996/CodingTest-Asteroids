@@ -79,21 +79,21 @@ public class ShipManager : MonoBehaviour
         float x = transform.position.x;
         float y = transform.position.y;
 
-        if (x > Screen.width / 100)
+        if (x > 10)
         {
-            x -= Screen.width / 50;
+            x -= 20;
         }
-        if (x < -Screen.width / 100)
+        if (x < -10)
         {
-            x += Screen.width / 50;
+            x += 20;
         }
-        if (y > Screen.height / 100)
+        if (y > 5.10f)
         {
-            y -= Screen.height / 50;
+            y -= 10.20f;
         }
-        if (y < -Screen.height / 100)
+        if (y < -5.10f)
         {
-            y += Screen.height / 50;
+            y += 10.20f;
         }
 
         transform.position = new Vector2(x, y);
