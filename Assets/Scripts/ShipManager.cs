@@ -9,15 +9,18 @@ public class ShipManager : MonoBehaviour
     [SerializeField] private Rigidbody2D shipRigidBody;
     [SerializeField] private float forwardSpeed;
     [SerializeField] private float torqueSpeed;
+    [SerializeField] private FireBullet bullet;
 
     // Private 
     private bool moveUp = false;
     private float torqueDirection = 0.0f;
+    private bool fireAgain = true;
     #endregion
 
     #region start/update/physics
     void Update()
     {
+        // Movement
         if (Input.GetKey(KeyCode.UpArrow))
         {
             moveUp = true;
@@ -41,6 +44,18 @@ public class ShipManager : MonoBehaviour
         }
 
         RepositionInScren();
+
+        // Fire
+        if (Input.GetKey(KeyCode.Space))
+        {
+            if (fireAgain)
+            {
+                fireAgain = false;
+                FireBullet _fireBullet = Instantiate(bullet, transform.position, Quaternion.identity);
+                _fireBullet.Shoot(transform.up);
+                StartCoroutine(DelayEachFrame());
+            }
+        }
     }
 
     private void FixedUpdate()
@@ -82,6 +97,12 @@ public class ShipManager : MonoBehaviour
         }
 
         transform.position = new Vector2(x, y);
+    }
+
+    IEnumerator DelayEachFrame()
+    {
+        yield return new WaitForSeconds(0.2f);
+        fireAgain = true;
     }
     #endregion
 }
